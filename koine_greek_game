@@ -1,0 +1,230 @@
+#define o idioma do jogo
+def choose_language():
+    print("Choose your language - Escolha seu idioma")
+    print("1. English")
+    print("2. Português")
+
+    chose_language = str(input("Type the number of your language""\n"
+                         "Digite o número do seu idioma"))
+    return chose_language
+
+#define o nome do usuário
+def save_player_name(player_name):
+    with open ("player_name.txt", "w", encoding="utf-8") as file:
+        file.write(player_name)
+
+#carrega o nome do usuário já salvo
+def load_player_name():
+    try:
+        with open ("player_name.txt", "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except  FileNotFoundError:
+        return None
+
+#define o menu principal
+def menu_principal(player_name):
+    if language == "Português":
+        print(f"Menu")
+        print("1. Praticar")
+        print("2. Criar Flashcards")
+        print("3. Dicionário")
+        print("4. Sair")
+    elif language == "English":
+        print("Menu")
+        print("1. Pratice")
+        print("2. Add Flashcard")
+        print("3. Dictionary")
+        print("4. Exit")
+
+#define o jogo
+def praticar(flashcards, player_name):
+    if language == "Português":
+        print(f"Bem vindo, {player_name}! Vamos praticar.")
+    elif language == "English":
+        print(f"Welcome, {player_name}! Let's pratice.")
+    correct_count = 0
+
+    for word, translation in flashcards.items():
+        if language == "Português":
+            guess = str(input(f"Qual significado de '{word}'?"))
+        elif language == "English":
+            guess = str(input(f"What does '{word}' mean?"))
+            pass
+            if language == "Português":
+                if guess.lower() == translation.lower():
+                    print("Parabéns!\n")
+            elif language == "English":
+                if guess.lower() == translation.lower():
+                    print("Congratulations!\n")
+                correct_count += 1
+            else:
+                if language == "Português":
+                    print(f"Puxa vida, resposta errada, a resposta correta seria '{translation}'.\n")
+                elif language == "English":
+                    print(f"Darn, wrong answer, the wright answer would be '{translation}'.\n")
+    if language == "Português":
+        print(f"Você acertou {correct_count} vezes de um total de {len(flashcards)} flashcards.\n")
+    elif language == "English":
+        print(f"You got it right {correct_count} times in a total of {len(flashcards)} flashcards.\n")
+
+#define a funcionalidade de criar flash cards
+def add_flashcards(flashcards):
+    if language == "Português":
+        word = str(input("Adicione um novo vocabulário que deseja aprender:"))
+        translation = str(input("Qual o significado?"))
+        flashcards[word] = translation
+        print("Beleza, flashcard criado!\n")
+        save_flashcards(flashcards)
+    elif language == "English":
+        word = str(input("Add new vocabulary you want to learn:"))
+        translation = str(input("What does it mean?"))
+        flashcards[word] = translation
+        print("Nice, new flashcard added!\n")
+        save_flashcards(flashcards)
+
+#define a funcionalidade de jogar flashcards
+def save_flashcards(flashcards):
+    if language == "Português":
+        with open("flashcards_pt.txt", "w", encoding="utf-8") as file:
+            for word, translation in flashcards.items():
+                file.write(f"{word}:{translation}\n")
+    elif language == "English":
+        with open("flashcards_en.txt", "w", encoding="utf-8") as file:
+            for word, translation in flashcards.items():
+                file.write(f"{word}:{translation}\n")
+#define a funcionalidade de trazer flashcards salvos na base
+def load_flashcards():
+    flashcards = {}
+    try:
+        if language == "Português":
+            with open("flashcards_pt.txt", "r", encoding="utf-8") as file:
+                for line in file:
+                    word, translation = line.strip().split(":")
+                    flashcards[word] = translation
+        elif language == "English":
+            with open("flashcards_en.txt", "r", encoding="utf-8") as file:
+                for line in file:
+                    word, translation = line.strip().split(":")
+                    flashcards[word] = translation
+    except FileNotFoundError:
+        pass
+    return flashcards
+
+#define o dicionário de grego
+def greek_dictionary():
+    if language == "Português":
+        print(f"Olá, {player_name}, vejo que está interessado em aprender novas palavras.")
+        print("Digite a palavra que deseja procurar ou 'sair' para voltar ao menu principal. "
+              "Por enquanto só estamos aceitando palavras em inglês, mas logo melhoraremos.")
+    elif language == "English":
+        print(f"Hello, {player_name}, I see that you are interested in learn new words.")
+        print("Type the word that you want to search or 'quite' to get back to the main menu.")
+
+    while True:
+        if language == "Português":
+            search_term = input(str("Digite a palavra: "))
+            if search_term.lower() == "sair":
+                break
+            else:
+                search_term = search_term.strip().lower()
+                found = False
+                with open ("greek_dictionary.txt","r", encoding="utf-8") as file:
+                    for line in file:
+                        parts = line.strip().split(",")
+                        if len(parts) == 5:
+                            word, alt_spellings, transliteration, gloss, strongs = parts
+                        if search_term in (word.lower(), alt_spellings.lower()):
+                            print("Palavra:", word)
+                            print("Forma alternativa:", alt_spellings)
+                            print("Transliteração:", transliteration)
+                            print("Significado:", gloss)
+                            print("Correspondência Strong:", strongs)
+                            found = True
+                            break
+
+                if not found:
+                    print("Palavra não encontrada no dicionário.")
+
+        elif language == "English":
+            search_term = input(str("Type the word: "))
+            if search_term.lower() == "quite":
+                break
+            else:
+                search_term = search_term.strip().lower()
+                found = False
+                with open ("greek_dictionary.txt","r", encoding="utf-8") as file:
+                    for line in file:
+                        parts = line.strip().split(",")
+                        if len(parts) == 5:
+                            word, alt_spellings, transliteration, gloss, strongs = parts
+                        if search_term in (word.lower(), alt_spellings.lower()):
+                            print("Word:", word)
+                            print("Alternative form:", alt_spellings)
+                            print("Transliteration:", transliteration)
+                            print("Meaning:", gloss)
+                            print("Strong's:", strongs)
+                            found = True
+                            break
+
+                if not found:
+                    print("I couldn't find this word.")
+
+language_choice = choose_language()
+
+if language_choice == "1":
+    language = "English"
+elif language_choice == "2":
+    language = "Português"
+else:
+    print("Opção inválida. Escolhendo o idioma padrão (Português)")
+    language = "Português"
+
+player_name = load_player_name()
+
+if not player_name:
+    if language == "Português":
+        print(str("Então você quer se aventurar no mundo do grego koiné, que legal!"))
+        player_name = (str(input("Para começar, me diga por favor, qual seu nome?")))
+
+        print(str(f"Olá, {player_name}! Me chamo Erasmo, é um prazer te conhecer.\n "
+                  f"Vamos juntos nessa jornada, eu serei seu guia e companheiro."))
+    elif language == "English":
+        print("So you want to venture into the world of Koine Greek, how exciting!")
+        player_name = input("To get started, please tell me your name: ").strip()
+        print(f"Hello, {player_name}! I'm Erasmus, and it's a pleasure to meet you.\n "
+              "We'll journey together, and I'll be your guide and companion.")
+    save_player_name(player_name)
+
+flashcards = load_flashcards()
+
+first_execution = True
+
+while True:
+    if not first_execution:
+        if language == "Português":
+            print(str(f"Olá, {player_name}, muitos aprendizados novos? Deixe-me te ajudar nos estudos do grego."))
+        elif language == "English":
+            print(f"Hello, {player_name}, ready for more learning? Let me help you with your Greek studies.")
+    else:
+        first_execution = False
+
+    menu_principal(player_name)
+    choice = input("Selecione sua opção: ")
+
+    if choice == "1":
+        praticar(flashcards, player_name)
+    elif choice == "2":
+        add_flashcards(flashcards)
+    elif choice == "3":
+        greek_dictionary()
+    elif choice == "4":
+        if language == "Português":
+            print("Até logo!")
+        elif language == "English":
+            print("See you soon!")
+        break
+    else:
+        if language == "Português":
+            print("ERRO. Por favor, selecione uma opção válida.\n")
+        elif language == "English":
+            print("ERROR. Please select a valid option.\n")
